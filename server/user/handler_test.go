@@ -23,7 +23,7 @@ func TestGetUserDetails(t *testing.T) {
 		{
 			name: "Test if success response ",
 			config: payload.Config{
-				OutputFileCreationPath: "../testData/output.json",
+				OutputFileCreationPath: "../../testData/output.json",
 				ThirdPartyAPIEndpoint:  "https://24pullrequests.com/users.json",
 			},
 			want: "nil",

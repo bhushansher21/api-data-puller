@@ -30,7 +30,7 @@ func TestSaveUserDetails(t *testing.T) {
 		{
 			name: "Test if success response ",
 			config: payload.Config{
-				OutputFileCreationPath: "../testData/output.json",
+				OutputFileCreationPath: "../../testData/output.json",
 			},
 			arg: payload.UserList{
 				{ID: 0001, Nickname: "Bhushan", GravatarID: "", GithubProfile: "https://github.com/Bhushan"},
@@ -40,7 +40,7 @@ func TestSaveUserDetails(t *testing.T) {
 		{
 			name: "Test if marshalling failed",
 			config: payload.Config{
-				OutputFileCreationPath: "../testData/output.json",
+				OutputFileCreationPath: "../../testData/output.json",
 			},
 			arg: payload.UserList{
 				{ID: 0001, Nickname: "Bhushan", GravatarID: "", GithubProfile: "https://github.com/Bhushan"},
@@ -94,14 +94,14 @@ func TestValidateFile(t *testing.T) {
 		{
 			name: "Test if renaming of file fail",
 			config: payload.Config{
-				OutputFileCreationPath: "../testData/output.json",
+				OutputFileCreationPath: "../../testData/output.json",
 			},
 			want: "Error while renaming old json file",
 		},
 		{
 			name: "Test if success response",
 			config: payload.Config{
-				OutputFileCreationPath: "../testData/dummyOutput.json",
+				OutputFileCreationPath: "../../testData/dummyOutput.json",
 			},
 			want: "nil",
 		},
