@@ -1,0 +1,6 @@
+{   
+    "thirdPartyAPIEndpoint" : "https://24pullrequests.com/users.json",
+    "outputFileCreationPath" : "D:/Project/testData/output.json",
+    "dataFetchDurationInMinute" : 2,
+    "fileNameFormat" : "2006-01-02 15_04_05"
+}
