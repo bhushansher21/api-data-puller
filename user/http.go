@@ -13,7 +13,12 @@ import (
 
 // GetUserDetails function invoke third party api and laod user details.
 func GetUserDetails(wg *sync.WaitGroup, mu *sync.Mutex, config payload.Config) {
-	res, err := http.Get(config.ThirdPartyAPIEndpoint)
+	request, err := http.NewRequest(http.MethodGet, config.ThirdPartyAPIEndpoint, nil)
+	if err != nil {
+		fmt.Errorf("Error while invoking third party API %v", err.Error())
+	}
+
+	res, err := http.DefaultClient.Do(request)
 	if err != nil {
 		fmt.Errorf("Error while invoking third party API %v", err.Error())
 	}
