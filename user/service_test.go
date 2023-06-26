@@ -17,53 +17,11 @@ type tests []struct {
 	want   string
 }
 
-func fakeOsRename(old, new string) error {
-	return errors.New("Error while renaming old json file of link")
-}
-
-func restoreOsRename(replace func(old, new string) error) {
-	osRename = replace
-}
-
-func TestValidateFile(t *testing.T) {
-	tst := tests{
-		{
-			name: "Test if renaming of file fail",
-			config: payload.Config{
-				OutputFileCreationPath: "D:/Project/testData/output.json",
-			},
-			want: "Error while renaming old json file",
-		},
-		{
-			name: "Test if success response",
-			config: payload.Config{
-				OutputFileCreationPath: "D:/Project/testData/dummyOutput.json",
-			},
-			want: "nil",
-		},
-	}
-
-	for _, tt := range tst {
-		if tt.name == "Test if renaming of file fail" {
-			fmt.Println("inside")
-			storedOsRename := osRename
-			osRename = fakeOsRename
-			defer restoreOsRename(storedOsRename)
-		}
-		fmt.Println("config: ", tt.config)
-		gotErr := validateFile(tt.config)
-		if gotErr != nil && !strings.Contains(gotErr.Error(), tt.want) {
-			t.Errorf("Expected %s but got %s", tt.want, gotErr.Error())
-		}
-		fmt.Println("counter", tt.want, "--->", gotErr)
-	}
-}
-
-func fakemarshal(v interface{}) ([]byte, error) {
+func fakeMarshal(v interface{}) ([]byte, error) {
 	return []byte{}, errors.New("Error while marshalling user details")
 }
 
-func restoremarshal(replace func(v interface{}) ([]byte, error)) {
+func restoreMarshal(replace func(v interface{}) ([]byte, error)) {
 	jsonMarshal = replace
 }
 
@@ -72,7 +30,7 @@ func TestSaveUserDetails(t *testing.T) {
 		{
 			name: "Test if success response ",
 			config: payload.Config{
-				OutputFileCreationPath: "D:/Project/testData/output.json",
+				OutputFileCreationPath: "../testData/output.json",
 			},
 			arg: payload.UserList{
 				{ID: 0001, Nickname: "Bhushan", GravatarID: "", GithubProfile: "https://github.com/Bhushan"},
@@ -82,7 +40,7 @@ func TestSaveUserDetails(t *testing.T) {
 		{
 			name: "Test if marshalling failed",
 			config: payload.Config{
-				OutputFileCreationPath: "D:/Project/testData/output.json",
+				OutputFileCreationPath: "../testData/output.json",
 			},
 			arg: payload.UserList{
 				{ID: 0001, Nickname: "Bhushan", GravatarID: "", GithubProfile: "https://github.com/Bhushan"},
@@ -107,7 +65,7 @@ func TestSaveUserDetails(t *testing.T) {
 		var storedMarshal func(v any) ([]byte, error)
 		if tt.name == "Test if marshalling failed" {
 			storedMarshal = jsonMarshal
-			jsonMarshal = fakemarshal
+			jsonMarshal = fakeMarshal
 		}
 		wg.Add(1)
 
@@ -118,7 +76,46 @@ func TestSaveUserDetails(t *testing.T) {
 		fmt.Println("counter", tt)
 
 		if tt.name == "Test if marshalling failed" {
-			restoremarshal(storedMarshal)
+			restoreMarshal(storedMarshal)
+		}
+	}
+}
+
+func fakeOsRename(old, new string) error {
+	return errors.New("Error while renaming old json file of link")
+}
+
+func restoreOsRename(replace func(old, new string) error) {
+	osRename = replace
+}
+
+func TestValidateFile(t *testing.T) {
+	tst := tests{
+		{
+			name: "Test if renaming of file fail",
+			config: payload.Config{
+				OutputFileCreationPath: "../testData/output.json",
+			},
+			want: "Error while renaming old json file",
+		},
+		{
+			name: "Test if success response",
+			config: payload.Config{
+				OutputFileCreationPath: "../testData/dummyOutput.json",
+			},
+			want: "nil",
+		},
+	}
+
+	for _, tt := range tst {
+		if tt.name == "Test if renaming of file fail" {
+			storedOsRename := osRename
+			osRename = fakeOsRename
+			defer restoreOsRename(storedOsRename)
+		}
+		gotErr := validateFile(tt.config)
+		if gotErr != nil && !strings.Contains(gotErr.Error(), tt.want) {
+			t.Errorf("Expected %s but got %s", tt.want, gotErr.Error())
 		}
 	}
 }
